@@ -1,8 +1,9 @@
-import 'package:coach_potato/auth.dart';
+import 'package:coach_potato/auth/coach_trainee_choice.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -13,11 +14,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Coach Potato',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
-        useMaterial3: true,
-      ),
-      home: const Auth(),
+      theme: ThemeData.dark(),
+      home: const CoachTraineeChoice(),
     );
   }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "921637590617",
+    "project_id": "coach-potato",
+    "storage_bucket": "coach-potato.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:921637590617:android:804f471df124c4edfe4348",
+        "android_client_info": {
+          "package_name": "com.coach.potato"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlu427lTQDWjL6s7kGYQRp3tGpBNucguw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
