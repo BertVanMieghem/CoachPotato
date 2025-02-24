@@ -1,4 +1,4 @@
-import 'package:coach_potato/constants/constants.dart';
+import 'package:coach_potato/constants/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

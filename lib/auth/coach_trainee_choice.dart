@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../constants/constants.dart';
+import '../constants/ui.dart';
 
 class CoachTraineeChoice extends StatelessWidget {
   const CoachTraineeChoice({super.key});

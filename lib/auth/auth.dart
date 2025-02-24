@@ -1,5 +1,5 @@
 import 'package:coach_potato/auth/sign_in_code.dart';
-import 'package:coach_potato/constants/constants.dart';
+import 'package:coach_potato/constants/ui.dart';
 import 'package:flutter/material.dart';
 
 class Auth extends StatelessWidget {
