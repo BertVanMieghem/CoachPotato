@@ -2,6 +2,7 @@ import 'package:coach_potato/auth/sign_in_code.dart';
 import 'package:coach_potato/constants/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});
@@ -41,7 +42,7 @@ class AuthPage extends StatelessWidget {
                 const SizedBox(height: defPadding),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/home');
+                    context.go('/dashboard');
                   },
                   child: Text(AppLocalizations.of(context)!.auth_sign_in),
                 ),

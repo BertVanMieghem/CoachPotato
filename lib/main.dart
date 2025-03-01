@@ -1,6 +1,5 @@
-import 'package:coach_potato/auth/auth.dart';
-import 'package:coach_potato/home/home.dart';
 import 'package:coach_potato/provider/theme_provider.dart';
+import 'package:coach_potato/router/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,16 +13,13 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MaterialApp(
+    return MaterialApp.router(
+
       title: 'Coach Potato',
       debugShowCheckedModeBanner: false,
 
       /// ROUTING
-      initialRoute: '/auth',
-      routes: <String, WidgetBuilder>{
-        '/auth': (BuildContext context) => AuthPage(),
-        '/home': (BuildContext context) => HomePage(),
-      },
+      routerConfig: ref.watch(routerProvider),
 
       /// THEME
       theme: ThemeData(
@@ -40,10 +36,6 @@ class MyApp extends ConsumerWidget {
         AppLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-
-      home: SafeArea(
-        child: const AuthPage(),
-      ),
     );
   }
 }
