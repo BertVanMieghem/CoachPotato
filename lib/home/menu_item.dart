@@ -22,7 +22,7 @@ class MenuItem extends StatelessWidget {
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      color: isActive ? Theme.of(context).colorScheme.primaryContainer : Colors.transparent,
+      color: isActive ? Theme.of(context).colorScheme.inversePrimary : Colors.transparent,
       child: ListTile(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -31,7 +31,7 @@ class SideMenu extends ConsumerWidget {
               width: 150,
               height: 150,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
+                color: Theme.of(context).colorScheme.inversePrimary,
                 shape: BoxShape.circle,
               ),
               child: Icon(Icons.person_outline, size: 100, color: Theme.of(context).colorScheme.onPrimary),

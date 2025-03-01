@@ -16,10 +16,7 @@ class HomePage extends StatelessWidget {
 
           // Main Content
           Expanded(
-            child: ClipRRect(
-              borderRadius: const BorderRadius.only(topLeft: Radius.circular(20)),
-              child: child,
-            ),
+            child: child,
           ),
         ],
       ),

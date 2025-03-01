@@ -1,9 +1,10 @@
 import 'dart:convert';
-
 import 'package:coach_potato/constants/db.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 
 class DatabaseProvider {
   DatabaseProvider._privateConstructor();
@@ -18,8 +19,14 @@ class DatabaseProvider {
   }
 
   Future<Database> _initDatabase() async {
-    final String databasesPath = await getDatabasesPath();
-    final String path = join(databasesPath, dbPath);
+    String path;
+    if (kIsWeb) {
+      databaseFactory = databaseFactoryFfiWeb;
+      path = dbPathWeb;
+    } else {
+      final String databasesPath = await getDatabasesPath();
+      path = join(databasesPath, dbPath);
+    }
 
     return await openDatabase(
       path,
@@ -39,21 +46,36 @@ class DatabaseProvider {
       CREATE TABLE coach (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL
-        created_at TEXT DEFAULT (datetime('now')),
-        updated_at TEXT,
+        email TEXT UNIQUE NOT NULL,
+        created_at INT NOT NULL,
+        updated_at INT
       );
     ''');
 
     await db.execute('''
       CREATE TABLE trainee (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL
-        created_at TEXT DEFAULT (datetime('now')),
-        updated_at TEXT,
+        first_name TEXT,
+        last_name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        phone TEXT,
+        discipline TEXT,
+        created_at INT NOT NULL,
+        updated_at INT
       );
     ''');
+
+    // insert dummy trainees
+    await db.insert('trainee', <String, dynamic>{
+      'first_name': 'John',
+      'last_name': 'Doe',
+      'email': 'john.doe@gmail.com',
+      'phone': '1234567890',
+      'discipline': 'Running',
+      'created_at': DateTime.now().millisecondsSinceEpoch,
+      'updated_at': DateTime.now().millisecondsSinceEpoch,
+    });
+
     await db.execute('''
       CREATE TABLE plan (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -61,8 +83,8 @@ class DatabaseProvider {
         trainee_id INTEGER NOT NULL,
         name TEXT NOT NULL,
         description TEXT,
-        created_at TEXT DEFAULT (datetime('now')),
-        updated_at TEXT,
+        created_at INT NOT NULL,
+        updated_at INT,
         FOREIGN KEY (coach_id) REFERENCES coach(id) ON DELETE CASCADE,
         FOREIGN KEY (trainee_id) REFERENCES trainee(id) ON DELETE CASCADE
       );
@@ -107,7 +129,7 @@ class DatabaseProvider {
       exercise['instructions'] = json.encode(exercise['instructions']);
       exercise['images'] = json.encode(exercise['images']);
 
-      await db.insert('predefined_exercise', Map<String, dynamic>.from(exercise));
+      await db.insert('exercise', Map<String, dynamic>.from(exercise));
     }
   }
 
