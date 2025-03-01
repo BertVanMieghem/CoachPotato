@@ -1,6 +1,7 @@
 import 'package:coach_potato/home/header.dart';
 import 'package:coach_potato/home/menu_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -40,10 +41,10 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 Divider(color: Theme.of(context).colorScheme.onPrimary),
-                MenuItem(title: 'Dashboard'),
-                MenuItem(title: 'Plans'),
-                MenuItem(title: 'Exercises'),
-                MenuItem(title: 'Settings'),
+                MenuItem(title: AppLocalizations.of(context)!.home_trainees),
+                MenuItem(title: AppLocalizations.of(context)!.home_trainings),
+                MenuItem(title: AppLocalizations.of(context)!.home_templates),
+                MenuItem(title: AppLocalizations.of(context)!.home_financial),
               ],
             ),
           ),

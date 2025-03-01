@@ -1,6 +1,7 @@
 import 'package:coach_potato/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Header extends ConsumerWidget {
   const Header({super.key});
@@ -16,7 +17,7 @@ class Header extends ConsumerWidget {
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              'Welcome, "Den Dikke"!',
+              AppLocalizations.of(context)!.home_greeting('Dikke'),
               style: TextStyle(fontSize: 28, color: Theme.of(context).colorScheme.onSurface),
             ),
           ),
@@ -30,7 +31,7 @@ class Header extends ConsumerWidget {
             },
           ),
         ],
-      )
+      ),
     );
   }
 }

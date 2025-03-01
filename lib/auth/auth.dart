@@ -1,6 +1,7 @@
 import 'package:coach_potato/auth/sign_in_code.dart';
 import 'package:coach_potato/constants/ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});
@@ -23,16 +24,16 @@ class AuthPage extends StatelessWidget {
                   style: TextStyle(fontSize: 42),
                 ),
                 const SizedBox(height: 3 * defPadding),
-                const TextField(
+                TextField(
                   decoration: InputDecoration(
-                    hintText: 'Email',
+                    hintText: AppLocalizations.of(context)!.auth_email,
                     border: OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: defPadding),
-                const TextField(
+                TextField(
                   decoration: InputDecoration(
-                    hintText: 'Password',
+                    hintText: AppLocalizations.of(context)!.auth_password,
                     border: OutlineInputBorder(),
                   ),
                   obscureText: true,
@@ -42,12 +43,12 @@ class AuthPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.pushNamed(context, '/home');
                   },
-                  child: const Text('Sign in'),
+                  child: Text(AppLocalizations.of(context)!.auth_sign_in),
                 ),
                 const SizedBox(height: defPadding / 2),
                 TextButton(
                   onPressed: () {},
-                  child: const Text('Create account'),
+                  child: Text(AppLocalizations.of(context)!.auth_create_account),
                 ),
 
                 Divider(
@@ -67,12 +68,12 @@ class AuthPage extends StatelessWidget {
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     spacing: defPadding / 2,
                     children: <Widget>[
                       Icon(Icons.pin_outlined, color: Colors.white),
-                      Text('Sign in via code'),
+                      Text(AppLocalizations.of(context)!.auth_code),
                     ],
                   ),
                 ),

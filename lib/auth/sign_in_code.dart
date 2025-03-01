@@ -1,6 +1,7 @@
 import 'package:coach_potato/constants/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignInCode extends StatefulWidget {
   const SignInCode({super.key});
@@ -38,8 +39,8 @@ class SignInCodeState extends State<SignInCode> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                const Text(
-                  'Enter your authentication code',
+                Text(
+                  AppLocalizations.of(context)!.auth_code_title,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
@@ -65,7 +66,7 @@ class SignInCodeState extends State<SignInCode> {
                   children: <ElevatedButton>[
                     ElevatedButton(
                       onPressed: _pasteFromClipboard,
-                      child: const Text('Paste from Clipboard'),
+                      child: Text(AppLocalizations.of(context)!.auth_code_paste),
                     ),
                     ElevatedButton(
                       onPressed: () => Navigator.pop(context),
@@ -73,7 +74,7 @@ class SignInCodeState extends State<SignInCode> {
                         backgroundColor: Colors.green,
                         foregroundColor: Colors.white,
                       ),
-                      child: const Text('Verify Code'),
+                      child: Text(AppLocalizations.of(context)!.auth_code_verify),
                     ),
                   ],
                 ),
