@@ -10,20 +10,9 @@ class SideMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final String activeRoute = ref.watch(activeMenuItemProvider);
-
-    final List<Map<String, dynamic>> menuItems = <Map<String, dynamic>>[
-      <String, dynamic>{'title': AppLocalizations.of(context)!.home_dashboard, 'route': '/dashboard', 'available': true},
-      <String, dynamic>{'title': AppLocalizations.of(context)!.home_trainees, 'route': '/trainees', 'available': true},
-      <String, dynamic>{'title': AppLocalizations.of(context)!.home_trainings, 'route': '/trainings', 'available': true},
-      <String, dynamic>{'title': AppLocalizations.of(context)!.home_templates, 'route': '/templates', 'available': false},
-      <String, dynamic>{'title': AppLocalizations.of(context)!.home_financial, 'route': '/financial', 'available': false},
-    ];
-
     return SizedBox(
       width: 250,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const SizedBox(height: 50),
           Center(
@@ -38,10 +27,13 @@ class SideMenu extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 50),
-          ...menuItems.map((Map<String, dynamic> item) => MenuItem(context: context, ref: ref, title: item['title']!, route: item['route']!, activeRoute: activeRoute, available: item['available']!)),
+          MenuItem(title: AppLocalizations.of(context)!.home_dashboard, route: '/dashboard'),
+          MenuItem(title: AppLocalizations.of(context)!.home_trainees, route: '/trainees'),
+          MenuItem(title: AppLocalizations.of(context)!.home_trainings, route: '/trainings'),
+          MenuItem(title: AppLocalizations.of(context)!.home_templates, route: '/templates'),
+          MenuItem(title: AppLocalizations.of(context)!.home_financial, route: '/financial'),
         ],
       ),
     );
   }
 }
-

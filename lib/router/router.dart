@@ -16,7 +16,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref<GoRouter> ref)
         builder: (BuildContext context, GoRouterState state) => const AuthPage(),
       ),
       ShellRoute(
-        builder: (BuildContext context, GoRouterState state, Widget child) => HomePage(child: child),
+        builder: (BuildContext context, GoRouterState state, Widget child) => HomePage(),
         routes: <GoRoute>[
           GoRoute(
             path: '/dashboard',
