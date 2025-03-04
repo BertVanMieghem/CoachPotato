@@ -32,6 +32,7 @@ dev_dependencies:
   custom_lint: ^0.7.3
   riverpod_lint: ^2.6.4
   sqflite_common_ffi_web: ^0.4.5+4
+  faker: ^2.2.0
 
 flutter:
   generate: true

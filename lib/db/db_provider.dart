@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:coach_potato/constants/db.dart';
+import 'package:coach_potato/faker/faker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
@@ -45,12 +46,20 @@ class DatabaseProvider {
     await db.execute('''
       CREATE TABLE coach (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
+        first_name TEXT NOT NULL,
+        last_name TEXT NOT NULL,
         email TEXT UNIQUE NOT NULL,
         created_at INT NOT NULL,
         updated_at INT
       );
     ''');
+
+    await db.insert('coach', <String, dynamic>{
+      'first_name': 'Den',
+      'last_name': 'Dikke',
+      'email': 'den.dikke@gmail.com',
+      'created_at': DateTime.now().millisecondsSinceEpoch,
+    });
 
     await db.execute('''
       CREATE TABLE trainee (
@@ -65,16 +74,22 @@ class DatabaseProvider {
       );
     ''');
 
-    // insert dummy trainees
-    await db.insert('trainee', <String, dynamic>{
-      'first_name': 'John',
-      'last_name': 'Doe',
-      'email': 'john.doe@gmail.com',
-      'phone': '1234567890',
-      'discipline': 'Running',
-      'created_at': DateTime.now().millisecondsSinceEpoch,
-      'updated_at': DateTime.now().millisecondsSinceEpoch,
-    });
+    await db.execute('''
+      CREATE TABLE favorite_trainee (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        coach_id INTEGER NOT NULL,
+        trainee_id INTEGER NOT NULL,
+        created_at INT NOT NULL,
+        FOREIGN KEY (coach_id) REFERENCES coach(id) ON DELETE CASCADE,
+        FOREIGN KEY (trainee_id) REFERENCES trainee(id) ON DELETE CASCADE,
+        UNIQUE(coach_id, trainee_id)
+      );
+    ''');
+
+    // insert 75 dummy trainees
+    for (int i = 0; i < 75; i++) {
+      await db.insert('trainee', Faker.getFakeTrainee());
+    }
 
     await db.execute('''
       CREATE TABLE plan (

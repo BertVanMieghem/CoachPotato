@@ -1,14 +1,16 @@
 import 'package:coach_potato/auth/sign_in_code.dart';
 import 'package:coach_potato/constants/ui.dart';
+import 'package:coach_potato/provider/coach_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class AuthPage extends StatelessWidget {
+class AuthPage extends ConsumerWidget {
   const AuthPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: Center(
         child: Padding(
@@ -42,6 +44,7 @@ class AuthPage extends StatelessWidget {
                 const SizedBox(height: defPadding),
                 ElevatedButton(
                   onPressed: () {
+                    ref.read(coachProvider.notifier).state = 1;
                     context.go('/dashboard');
                   },
                   child: Text(AppLocalizations.of(context)!.auth_sign_in),

@@ -1,7 +1,7 @@
 import 'package:coach_potato/auth/auth.dart';
 import 'package:coach_potato/home/dashboard.dart';
 import 'package:coach_potato/home/home.dart';
-import 'package:coach_potato/home/trainees.dart';
+import 'package:coach_potato/trainees/trainees.dart';
 import 'package:coach_potato/home/trainings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
