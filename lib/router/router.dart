@@ -1,9 +1,9 @@
 import 'package:coach_potato/auth/auth.dart';
-import 'package:coach_potato/home/dashboard.dart';
-import 'package:coach_potato/home/home.dart';
-import 'package:coach_potato/trainees/trainee_detail.dart';
-import 'package:coach_potato/trainees/trainees.dart';
-import 'package:coach_potato/home/trainings.dart';
+import 'package:coach_potato/pages/home/dashboard.dart';
+import 'package:coach_potato/pages/home/home.dart';
+import 'package:coach_potato/pages/trainees/trainee_detail.dart';
+import 'package:coach_potato/pages/trainees/trainees.dart';
+import 'package:coach_potato/pages/trainings/trainings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';

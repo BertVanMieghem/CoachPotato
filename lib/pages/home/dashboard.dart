@@ -1,5 +1,4 @@
-import 'package:coach_potato/home/header.dart';
-import 'package:coach_potato/trainees/trainees.dart';
+import 'package:coach_potato/pages/home/header.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatelessWidget {
@@ -26,8 +25,7 @@ class Dashboard extends StatelessWidget {
                 Card(
                   elevation: 4,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  child: Trainees(),
-                )
+                ),
               ],
             ),
           ),

@@ -1,4 +1,4 @@
-import 'package:coach_potato/home/side_menu.dart';
+import 'package:coach_potato/pages/home/side_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';

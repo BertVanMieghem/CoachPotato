@@ -1,14 +1,13 @@
-import 'package:coach_potato/home/side_menu.dart';
+import 'package:coach_potato/pages/home/side_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomePage extends ConsumerWidget {
+class HomePage extends StatelessWidget {
   const HomePage({this.child, super.key});
 
   final Widget? child;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Row(
         children: <Widget>[

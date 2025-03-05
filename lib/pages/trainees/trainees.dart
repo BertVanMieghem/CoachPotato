@@ -1,7 +1,8 @@
 import 'package:coach_potato/constants/ui.dart';
 import 'package:coach_potato/model/trainee.dart';
+import 'package:coach_potato/pages/trainees/trainee_detail.dart';
 import 'package:coach_potato/provider/trainee_provider.dart';
-import 'package:coach_potato/trainees/trainees_list.dart';
+import 'package:coach_potato/pages/trainees/trainees_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -24,6 +25,7 @@ class Trainees extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AsyncValue<List<Trainee>> trainees = ref.watch(traineesProvider);
     final String filter = ref.watch(traineeFilterProvider);
+    final int? traineeId = ref.watch(traineeIdProvider);
 
     return trainees.when(
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -74,6 +76,9 @@ class Trainees extends ConsumerWidget {
                 ],
               ),
             ),
+
+            if (traineeId != null)
+              TraineeDetail(id: traineeId),
           ],
         );
       },
