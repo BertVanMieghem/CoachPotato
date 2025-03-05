@@ -35,42 +35,46 @@ class Trainees extends ConsumerWidget {
 
         final List<Trainee> filteredTrainees = _filteredTrainees(trainees, filter);
 
-        return Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 500),
-            child: Column(
-              children: <Widget>[
-                if (trainees.length > 10)
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        labelText: '${trainees.length} Trainees',
-                        prefixIcon: const Icon(Icons.search),
-                        border: const OutlineInputBorder(),
+        return Row(
+          children: <Widget>[
+            Container(
+              color: Theme.of(context).colorScheme.surfaceContainerLow,
+              constraints: const BoxConstraints(maxWidth: 500),
+              child: Column(
+                children: <Widget>[
+                  if (trainees.length > 10)
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          labelText: '${trainees.length} Trainees',
+                          prefixIcon: const Icon(Icons.search),
+                          border: const OutlineInputBorder(),
+                        ),
+                        onChanged: (String value) {
+                          ref.read(traineeFilterProvider.notifier).state = value;
+                        },
                       ),
-                      onChanged: (String value) {
-                        ref.read(traineeFilterProvider.notifier).state = value;
-                      },
-                    ),
-                  )
-                else
-                  Padding(
-                    padding: const EdgeInsets.only(top: defPadding / 2),
-                    child: Text(
-                      'Trainees',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                        fontSize: 18,
+                    )
+                  else
+                    Padding(
+                      padding: const EdgeInsets.only(top: defPadding / 2),
+                      child: Text(
+                        'Trainees',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimaryContainer,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
+                  Flexible(
+                    child: TraineesList(trainees: filteredTrainees),
                   ),
-
-                Expanded(child: TraineesList(trainees: filteredTrainees)),
-              ],
+                ],
+              ),
             ),
-          ),
+          ],
         );
       },
     );
