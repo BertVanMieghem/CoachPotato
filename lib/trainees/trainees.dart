@@ -1,85 +1,78 @@
 import 'package:coach_potato/constants/ui.dart';
-import 'package:coach_potato/db/util/trainee_db_util.dart';
 import 'package:coach_potato/model/trainee.dart';
+import 'package:coach_potato/provider/trainee_provider.dart';
 import 'package:coach_potato/trainees/trainees_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Trainees extends StatefulWidget {
-  const Trainees({super.key});
 
-  @override
-  State<Trainees> createState() => _TraineesState();
-}
+class Trainees extends ConsumerWidget {
+  const Trainees({this.child, super.key});
 
-class _TraineesState extends State<Trainees> {
-  bool _loading = true;
-  List<Trainee> _trainees = <Trainee>[];
-  String _filter = '';
+  final Widget? child;
 
-  @override
-  void initState() {
-    super.initState();
-
-    Future<void>.delayed(Duration.zero, () async {
-      _trainees = await TraineeDbUtil.getAllTrainees();
-      setState(() => _loading = false);
-    });
-  }
-
-  List<Trainee> _filteredTrainees() {
-    if (_filter.isEmpty) return _trainees;
-    return _trainees.where((Trainee t) =>
-    t.firstName?.toLowerCase().contains(_filter.toLowerCase()) == true ||
-        t.lastName.toLowerCase().contains(_filter.toLowerCase()) ||
-        t.email.toLowerCase().contains(_filter.toLowerCase()),
-    ).toList();
+  List<Trainee> _filteredTrainees(List<Trainee> trainees, String filter) {
+    if (filter.isEmpty) return trainees;
+    return trainees.where((Trainee t) {
+      return t.firstName?.toLowerCase().contains(filter.toLowerCase()) == true ||
+          t.lastName.toLowerCase().contains(filter.toLowerCase()) ||
+          t.email.toLowerCase().contains(filter.toLowerCase());
+    }).toList();
   }
 
   @override
-  Widget build(BuildContext context) {
-    if (_loading) {
-      return const Center(child: CircularProgressIndicator());
-    }
+  Widget build(BuildContext context, WidgetRef ref) {
+    final AsyncValue<List<Trainee>> trainees = ref.watch(traineesProvider);
+    final String filter = ref.watch(traineeFilterProvider);
 
-    if (_trainees.isEmpty) {
-      return const Center(child: Text('No trainees found'));
-    }
+    return trainees.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (Object e, StackTrace s) => const Center(child: Text('Failed to load trainees')),
+      data: (List<Trainee> trainees) {
+        if (trainees.isEmpty) {
+          return const Center(child: Text('No trainees found'));
+        }
 
-    final int traineeCount = _trainees.length;
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 500),
-        child: Column(
-          children: <Widget>[
-            if (traineeCount > 100)
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: '$traineeCount Trainees',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(),
+        final List<Trainee> filteredTrainees = _filteredTrainees(trainees, filter);
+
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 500),
+            child: Column(
+              children: <Widget>[
+                if (trainees.length > 10)
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: '${trainees.length} Trainees',
+                        prefixIcon: const Icon(Icons.search),
+                        border: const OutlineInputBorder(),
+                      ),
+                      onChanged: (String value) {
+                        ref.read(traineeFilterProvider.notifier).state = value;
+                      },
+                    ),
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.only(top: defPadding / 2),
+                    child: Text(
+                      'Trainees',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        fontSize: 18,
+                      ),
+                    ),
                   ),
-                  onChanged: (String value) {
-                    setState(() => _filter = value);
-                  },
-                ),
-              )
-            else
-              Padding(
-                padding: const EdgeInsets.only(top: defPadding / 2),
-                child: Text(
-                  'Trainees',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 18),
-                ),
-              ),
-            Expanded(
-                child: TraineesList(trainees: _filteredTrainees()),
+
+                Expanded(child: TraineesList(trainees: filteredTrainees)),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

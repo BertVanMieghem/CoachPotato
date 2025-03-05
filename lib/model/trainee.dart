@@ -6,19 +6,19 @@ class Trainee {
     email: data['email'] as String,
     phone: data['phone'] as String?,
     discipline: data['discipline'] as String?,
-    createdOn: data['created_at'] as int,
-    updatedOn: data['updated_at'] as int?,
+    createdAt: data['created_at'] as int,
+    updatedAt: data['updated_at'] as int?,
   );
 
   Trainee({
     required this.lastName,
     required this.email,
-    required this.createdOn,
+    required this.createdAt,
     this.id,
     this.firstName,
     this.phone,
     this.discipline,
-    this.updatedOn,
+    this.updatedAt,
   });
 
 
@@ -28,13 +28,13 @@ class Trainee {
   String email;
   String? phone;
   String? discipline;
-  int createdOn;
-  int? updatedOn;
+  int createdAt;
+  int? updatedAt;
 
 
   @override
   String toString() {
-    return 'Trainee{id: $id, firstName: $firstName, lastName: $lastName, email: $email, phone: $phone, discipline: $discipline, createdOn: $createdOn, updatedOn: $updatedOn}';
+    return 'Trainee{id: $id, firstName: $firstName, lastName: $lastName, email: $email, phone: $phone, discipline: $discipline, createdOn: $createdAt, updatedOn: $updatedAt}';
   }
 
   Map<String, dynamic> toMap() {
@@ -45,8 +45,8 @@ class Trainee {
       'email': email,
       'phone': phone,
       'discipline': discipline,
-      'created_on': createdOn,
-      'updated_on': updatedOn,
+      'created_on': createdAt,
+      'updated_on': updatedAt,
     };
   }
 }

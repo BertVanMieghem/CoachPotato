@@ -11,6 +11,12 @@ class TraineeDbUtil {
     return objectsToTrainees(objects);
   }
 
+  static Future<Trainee> getTraineeById(int id) async {
+    final Database db = await provider.database;
+    final List<Map<String, dynamic>> objects = await db.query('trainee', where: 'id = ?', whereArgs: <dynamic>[id]);
+    return Trainee.fromMap(objects.first);
+  }
+
   /// AUXILIARY
   static List<Trainee> objectsToTrainees(List<Map<String, dynamic>> objects) {
     return objects.map((Map<String, dynamic> e) => Trainee.fromMap(e)).toList();
