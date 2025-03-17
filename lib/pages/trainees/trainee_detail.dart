@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 class TraineeDetail extends ConsumerWidget {
   const TraineeDetail({required this.id, super.key});
 
-  final int id;
+  final String id;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AsyncValue<Trainee?> trainee = ref.watch(traineeProvider(id));

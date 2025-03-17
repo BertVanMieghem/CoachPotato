@@ -1,6 +1,6 @@
 class Trainee {
   factory Trainee.fromMap(Map<String, dynamic> data) => Trainee(
-    id: data['id'] as int,
+    id: data['id'] as String,
     firstName: data['first_name'] as String?,
     lastName: data['last_name'] as String,
     email: data['email'] as String,
@@ -22,7 +22,7 @@ class Trainee {
   });
 
 
-  int? id;
+  String? id;
   String? firstName;
   String lastName;
   String email;

@@ -3,6 +3,7 @@ import 'package:faker/faker.dart';
 class Faker {
   static Map<String, dynamic> getFakeTrainee() {
     return <String, dynamic>{
+      'coach_id': '2QPYiJHMked0aw3p1vA97rmeHJ22',
       'first_name': faker.person.firstName(),
       'last_name': faker.person.lastName(),
       'email': faker.internet.email(),

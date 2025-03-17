@@ -1,4 +1,13 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-/// The currently logged-in coach ID
-final StateProvider<int?> coachProvider = StateProvider<int?>((Ref ref) => null);
+class CoachProvider {
+  static final FirebaseAuth auth = FirebaseAuth.instance;
+
+  static String getCoachUid() {
+    final String? coachUid = auth.currentUser?.uid;
+    if (coachUid == null) {
+      throw Exception('No authenticated coach');
+    }
+    return coachUid;
+  }
+}

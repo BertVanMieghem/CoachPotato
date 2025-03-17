@@ -40,7 +40,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref<GoRouter> ref)
                 path: ':id',
                 pageBuilder: (BuildContext context, GoRouterState state) {
                   final String id = state.pathParameters['id'] ?? '';
-                  return NoTransitionPage<TraineeDetail>(child: TraineeDetail(id: int.parse(id)));
+                  return NoTransitionPage<TraineeDetail>(child: TraineeDetail(id: id.toString()));
                 },
               ),
             ],

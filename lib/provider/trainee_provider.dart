@@ -13,33 +13,32 @@ final FutureProvider<List<Trainee>> traineesProvider = FutureProvider<List<Train
 final StateProvider<String> traineeFilterProvider = StateProvider<String>((Ref ref) => '');
 
 /// Provider for currently selected trainee
-final StateProvider<int?> traineeIdProvider = StateProvider<int?>((Ref ref) => null);
+final StateProvider<String?> traineeIdProvider = StateProvider<String?>((Ref ref) => null);
 
 /// Provider to fetch the currently selected trainee
-final FutureProviderFamily<Trainee?, int> traineeProvider = FutureProvider.family<Trainee?, int>((Ref ref, int id) async {
+final FutureProviderFamily<Trainee?, String> traineeProvider = FutureProvider.family<Trainee?, String>((Ref ref, String id) async {
   return await TraineeDbUtil.getTraineeById(id);
 });
 
 /// Provider to fetch favorite trainees for the currently logged-in coach
 final FutureProvider<List<Trainee>> favoriteTraineesProvider = FutureProvider<List<Trainee>>((Ref ref) async {
-  final int? coachId = ref.watch(coachProvider);
-  if (coachId == null) return <Trainee>[];
-  return FavoriteTraineeDbUtil.getFavoriteTrainees(coachId);
+  return FavoriteTraineeDbUtil.getFavoriteTrainees();
 });
 
 /// Provider to toggle favorite status
 final favoriteToggleProvider = Provider((Ref ref) {
   return (Trainee trainee) async {
-    final int? coachId = ref.read(coachProvider);
-    if (coachId == null) return;
+    print('Toggling favorite for ${trainee.id}');
+    final String coachId = CoachProvider.getCoachUid();
 
+    print('coachId: $coachId');
     final List<Trainee> favorites = await ref.read(favoriteTraineesProvider.future);
     final bool isFavorite = favorites.any((Trainee t) => t.id == trainee.id);
 
     if (isFavorite) {
-      await FavoriteTraineeDbUtil.removeFavorite(coachId, trainee.id!);
+      await FavoriteTraineeDbUtil.removeFavoriteTrainee(trainee.id!);
     } else {
-      await FavoriteTraineeDbUtil.addFavorite(coachId, trainee.id!);
+      await FavoriteTraineeDbUtil.addFavoriteTrainee(trainee.id!);
     }
 
     ref.invalidate(favoriteTraineesProvider);

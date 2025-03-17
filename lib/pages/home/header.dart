@@ -21,22 +21,32 @@ class Header extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Align(
-            alignment: Alignment.centerLeft,
-            child: userDataAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (Object error, StackTrace stackTrace) => Center(child: Text('Error: $error')),
-              data: (Map<String, dynamic>? userData) {
-                if (userData == null) {
-                  return const Center(child: Text('No user data found.'));
-                }
+          Row(
+            spacing: defPadding,
+            children: <Widget>[
+              Text(
+                '🛋️🥔',
+                style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.primary),
+              ),
 
-                return Text(
-                  AppLocalizations.of(context)!.home_greeting(userData['firstName']),
-                  style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.onSurface),
-                );
-              },
-            ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: userDataAsync.when(
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (Object error, StackTrace stackTrace) => Center(child: Text('Error: $error')),
+                  data: (Map<String, dynamic>? userData) {
+                    if (userData == null) {
+                      return const Center(child: Text('No user data found.'));
+                    }
+
+                    return Text(
+                      AppLocalizations.of(context)!.home_greeting(userData['firstName']),
+                      style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.onSurface),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
 
           MenuItems(),

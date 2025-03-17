@@ -1,24 +1,35 @@
-import 'package:coach_potato/db/db_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:coach_potato/model/trainee.dart';
-import 'package:sqflite/sqflite.dart';
 
 class TraineeDbUtil {
-  static final DatabaseProvider provider = DatabaseProvider.instance;
+  static final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  static final FirebaseAuth auth = FirebaseAuth.instance;
 
   static Future<List<Trainee>> getAllTrainees() async {
-    final Database db = await provider.database;
-    final List<Map<String, dynamic>> objects = await db.query('trainee');
-    return objectsToTrainees(objects);
+    final String? coachUid = auth.currentUser?.uid;
+    if (coachUid == null) {
+      throw Exception('No authenticated coach');
+    }
+
+    final QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
+        .collection('trainees')
+        .where('coach_id', isEqualTo: coachUid)
+        .get();
+
+    return snapshot.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+      return Trainee.fromMap(doc.data()..['id'] = doc.id);
+    }).toList();
   }
 
-  static Future<Trainee> getTraineeById(int id) async {
-    final Database db = await provider.database;
-    final List<Map<String, dynamic>> objects = await db.query('trainee', where: 'id = ?', whereArgs: <dynamic>[id]);
-    return Trainee.fromMap(objects.first);
-  }
+  static Future<Trainee> getTraineeById(String id) async {
+    final DocumentSnapshot<Map<String, dynamic>> doc =
+    await firestore.collection('trainees').doc(id).get();
 
-  /// AUXILIARY
-  static List<Trainee> objectsToTrainees(List<Map<String, dynamic>> objects) {
-    return objects.map((Map<String, dynamic> e) => Trainee.fromMap(e)).toList();
+    if (!doc.exists) {
+      throw Exception('Trainee not found');
+    }
+
+    return Trainee.fromMap(doc.data()!..['id'] = doc.id);
   }
 }

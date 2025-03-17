@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coach_potato/constants/ui.dart';
+import 'package:coach_potato/faker/faker.dart';
 import 'package:coach_potato/model/trainee.dart';
 import 'package:coach_potato/pages/trainees/trainee_detail.dart';
 import 'package:coach_potato/provider/trainee_provider.dart';
@@ -25,7 +27,7 @@ class Trainees extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AsyncValue<List<Trainee>> trainees = ref.watch(traineesProvider);
     final String filter = ref.watch(traineeFilterProvider);
-    final int? traineeId = ref.watch(traineeIdProvider);
+    final String? traineeId = ref.watch(traineeIdProvider);
 
     return trainees.when(
       loading: () => const Center(child: CircularProgressIndicator()),
