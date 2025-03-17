@@ -1,16 +1,58 @@
-import 'package:coach_potato/auth/sign_in_code.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coach_potato/constants/ui.dart';
-import 'package:coach_potato/provider/coach_provider.dart';
+import 'package:coach_potato/provider/auth_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class AuthPage extends ConsumerWidget {
+class AuthPage extends ConsumerStatefulWidget {
   const AuthPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AuthPage> createState() => _AuthPageState();
+}
+
+class _AuthPageState extends ConsumerState<AuthPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+
+  void _signIn() async {
+    setState(() => _isLoading = true);
+
+    final AuthService authService = ref.read(authServiceProvider);
+    final User? user = await authService.signInWithEmail(
+      _emailController.text.trim(),
+      _passwordController.text.trim(),
+    );
+
+    if (user != null) {
+      print(getUserData());
+      context.go('/dashboard');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Invalid email or password')),
+      );
+    }
+
+    setState(() => _isLoading = false);
+  }
+
+  Future<Map<String, dynamic>?> getUserData() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    String? uid = auth.currentUser?.uid;
+    if (uid == null) return null;
+
+    DocumentSnapshot<Map<String, dynamic>?> userDoc = await firestore.collection('users').doc(uid).get();
+    return userDoc.data();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: Padding(
@@ -28,6 +70,7 @@ class AuthPage extends ConsumerWidget {
                 ),
                 const SizedBox(height: 3 * defPadding),
                 TextField(
+                  controller: _emailController,
                   decoration: InputDecoration(
                     hintText: AppLocalizations.of(context)!.auth_email,
                     border: OutlineInputBorder(),
@@ -35,6 +78,7 @@ class AuthPage extends ConsumerWidget {
                 ),
                 const SizedBox(height: defPadding),
                 TextField(
+                  controller: _passwordController,
                   decoration: InputDecoration(
                     hintText: AppLocalizations.of(context)!.auth_password,
                     border: OutlineInputBorder(),
@@ -43,43 +87,19 @@ class AuthPage extends ConsumerWidget {
                 ),
                 const SizedBox(height: defPadding),
                 ElevatedButton(
-                  onPressed: () {
-                    ref.read(coachProvider.notifier).state = 1;
-                    context.go('/dashboard');
-                  },
-                  child: Text(AppLocalizations.of(context)!.auth_sign_in),
+                  onPressed: _isLoading ? null : _signIn,
+                  child: _isLoading
+                      ? SizedBox(
+                          width: defPadding,
+                          height: defPadding,
+                          child: const CircularProgressIndicator(),
+                        )
+                      : Text(AppLocalizations.of(context)!.auth_sign_in),
                 ),
                 const SizedBox(height: defPadding / 2),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => context.go('/signup'),
                   child: Text(AppLocalizations.of(context)!.auth_create_account),
-                ),
-
-                Divider(
-                  height: 2 * defPadding,
-                  thickness: 1,
-                  color: Theme.of(context).dividerColor.withValues(alpha: 0.5),
-                ),
-
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute<SignInCode>(builder: (BuildContext context) => const SignInCode()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    spacing: defPadding / 2,
-                    children: <Widget>[
-                      Icon(Icons.pin_outlined, color: Colors.white),
-                      Text(AppLocalizations.of(context)!.auth_code),
-                    ],
-                  ),
                 ),
               ],
             ),

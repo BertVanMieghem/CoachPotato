@@ -1,11 +1,26 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coach_potato/provider/theme_provider.dart';
 import 'package:coach_potato/router/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
-  runApp(ProviderScope(child: const MyApp()));
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  FirebaseFirestore db = FirebaseFirestore.instance;
+  try {
+    await db.enablePersistence(const PersistenceSettings(synchronizeTabs: true));
+  } catch (e) {
+    debugPrint(e.toString());
+  }
+
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends ConsumerWidget {

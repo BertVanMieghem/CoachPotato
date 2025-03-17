@@ -1,4 +1,5 @@
 import 'package:coach_potato/auth/auth.dart';
+import 'package:coach_potato/auth/sign_up.dart';
 import 'package:coach_potato/pages/home/dashboard.dart';
 import 'package:coach_potato/pages/home/home.dart';
 import 'package:coach_potato/pages/trainees/trainee_detail.dart';
@@ -15,6 +16,10 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref<GoRouter> ref)
       GoRoute(
         path: '/auth',
         builder: (BuildContext context, GoRouterState state) => const AuthPage(),
+      ),
+      GoRoute(
+          path: '/signup',
+          builder: (BuildContext context, GoRouterState state) => const SignUpPage()
       ),
       ShellRoute(
         builder: (BuildContext context, GoRouterState state, Widget child) => HomePage(child: child),

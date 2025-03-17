@@ -1,0 +1,35 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "coach-potato",
+          "appId": "1:921637590617:android:804f471df124c4edfe4348",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "coach-potato",
+          "appId": "1:921637590617:ios:1c6dc4f43913dd1afe4348",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "coach-potato",
+          "configurations": {
+            "android": "1:921637590617:android:804f471df124c4edfe4348",
+            "ios": "1:921637590617:ios:1c6dc4f43913dd1afe4348",
+            "web": "1:921637590617:web:564096d28c636be4fe4348"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}
