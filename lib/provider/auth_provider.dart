@@ -8,6 +8,15 @@ final StreamProvider<User?> authStateProvider = StreamProvider<User?>((Ref ref) 
   return ref.watch(authProvider).authStateChanges();
 });
 
+final FutureProvider<Map<String, dynamic>?> userDataProvider = FutureProvider<Map<String, dynamic>?>((Ref ref) async {
+  final User? user = ref.watch(authStateProvider).value;
+  if (user == null) return null;
+
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final DocumentSnapshot<Map<String, dynamic>?> userDoc = await firestore.collection('coaches').doc(user.uid).get();
+  return userDoc.data();
+});
+
 class AuthService {
   AuthService(this._auth);
   final FirebaseAuth _auth;
@@ -68,7 +77,6 @@ class AuthService {
       return false;
     }
   }
-
 
   Future<void> signOut() async {
     await _auth.signOut();

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:coach_potato/constants/db.dart';
-import 'package:coach_potato/faker/faker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
@@ -43,82 +42,6 @@ class DatabaseProvider {
   }
 
   Future<void> _onCreate(Database db, int version) async {
-    await db.execute('''
-      CREATE TABLE coach (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        first_name TEXT NOT NULL,
-        last_name TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL,
-        created_at INT NOT NULL,
-        updated_at INT
-      );
-    ''');
-
-    await db.insert('coach', <String, dynamic>{
-      'first_name': 'Den',
-      'last_name': 'Dikke',
-      'email': 'den.dikke@gmail.com',
-      'created_at': DateTime.now().millisecondsSinceEpoch,
-    });
-
-    await db.execute('''
-      CREATE TABLE trainee (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        first_name TEXT,
-        last_name TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL,
-        phone TEXT,
-        discipline TEXT,
-        created_at INT NOT NULL,
-        updated_at INT
-      );
-    ''');
-
-    await db.execute('''
-      CREATE TABLE favorite_trainee (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        coach_id INTEGER NOT NULL,
-        trainee_id INTEGER NOT NULL,
-        created_at INT NOT NULL,
-        FOREIGN KEY (coach_id) REFERENCES coach(id) ON DELETE CASCADE,
-        FOREIGN KEY (trainee_id) REFERENCES trainee(id) ON DELETE CASCADE,
-        UNIQUE(coach_id, trainee_id)
-      );
-    ''');
-
-    // insert 75 dummy trainees
-    for (int i = 0; i < 75; i++) {
-      await db.insert('trainee', Faker.getFakeTrainee());
-    }
-
-    await db.execute('''
-      CREATE TABLE plan (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        coach_id INTEGER NOT NULL,
-        trainee_id INTEGER NOT NULL,
-        name TEXT NOT NULL,
-        description TEXT,
-        created_at INT NOT NULL,
-        updated_at INT,
-        FOREIGN KEY (coach_id) REFERENCES coach(id) ON DELETE CASCADE,
-        FOREIGN KEY (trainee_id) REFERENCES trainee(id) ON DELETE CASCADE
-      );
-    ''');
-
-    await db.execute('''
-      CREATE TABLE plan_exercise (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        plan_id INTEGER NOT NULL,
-        exercise_id INTEGER NOT NULL,
-        sets INTEGER,
-        reps INTEGER,
-        weight REAL,
-        order_index INTEGER,
-        FOREIGN KEY (plan_id) REFERENCES plan(id) ON DELETE CASCADE,
-        FOREIGN KEY (exercise_id) REFERENCES exercise(id) ON DELETE CASCADE
-      )
-    ''');
-
     await db.execute('''
       CREATE TABLE exercise (
         id TEXT PRIMARY KEY,
