@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coach_potato/constants/ui.dart';
-import 'package:coach_potato/faker/faker.dart';
 import 'package:coach_potato/model/trainee.dart';
 import 'package:coach_potato/pages/trainees/trainee_detail.dart';
 import 'package:coach_potato/provider/trainee_provider.dart';
