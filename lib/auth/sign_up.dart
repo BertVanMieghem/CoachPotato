@@ -27,6 +27,12 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
       );
       return;
     }
+    if (_firstNameController.text.isEmpty || _lastNameController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please fill in your first and last name')),
+      );
+      return;
+    }
 
     setState(() => _isLoading = true);
 

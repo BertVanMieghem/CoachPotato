@@ -1,4 +1,4 @@
-import 'package:coach_potato/pages/home/side_menu.dart';
+import 'package:coach_potato/pages/home/header.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -9,9 +9,9 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
+      body: Column(
         children: <Widget>[
-          const SideMenu(),
+          Header(),
           Expanded(
             child: ClipRRect(
               borderRadius: const BorderRadius.only(topLeft: Radius.circular(20)),

@@ -1,4 +1,3 @@
-import 'package:coach_potato/pages/home/header.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatelessWidget {
@@ -8,9 +7,6 @@ class Dashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-
-        Header(),
-
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(20.0),

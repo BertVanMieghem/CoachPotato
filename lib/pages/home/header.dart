@@ -1,4 +1,5 @@
 import 'package:coach_potato/constants/ui.dart';
+import 'package:coach_potato/pages/home/menu_items.dart';
 import 'package:coach_potato/provider/auth_provider.dart';
 import 'package:coach_potato/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,8 @@ class Header extends ConsumerWidget {
     final AsyncValue<Map<String, dynamic>?> userDataAsync = ref.watch(userDataProvider);
 
     return Container(
-      padding: const EdgeInsets.all(20.0),
+      height: headerHeight,
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
       color: Theme.of(context).colorScheme.surfaceContainerLow,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -31,15 +33,21 @@ class Header extends ConsumerWidget {
 
                 return Text(
                   AppLocalizations.of(context)!.home_greeting(userData['firstName']),
-                  style: TextStyle(fontSize: 28, color: Theme.of(context).colorScheme.onSurface),
+                  style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.onSurface),
                 );
               },
             ),
           ),
 
+          MenuItems(),
+
           Row(
             spacing: defPadding,
             children: <IconButton>[
+              IconButton(
+                icon: Icon(Icons.person_outline),
+                onPressed: () {},
+              ),
               IconButton(
                 icon: Icon(ref.watch(themeProvider) == ThemeMode.light
                     ? Icons.dark_mode

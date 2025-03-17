@@ -20,6 +20,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
   bool _isLoading = false;
 
   void _signIn() async {
+    if (_isLoading) return;
     setState(() => _isLoading = true);
 
     final AuthService authService = ref.read(authServiceProvider);
@@ -84,10 +85,11 @@ class _AuthPageState extends ConsumerState<AuthPage> {
                     border: OutlineInputBorder(),
                   ),
                   obscureText: true,
+                  onSubmitted: (String _) => _signIn(),
                 ),
                 const SizedBox(height: defPadding),
                 ElevatedButton(
-                  onPressed: _isLoading ? null : _signIn,
+                  onPressed: _signIn,
                   child: _isLoading
                       ? SizedBox(
                           width: defPadding,
