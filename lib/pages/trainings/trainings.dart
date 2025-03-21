@@ -1,10 +1,49 @@
+import 'package:coach_potato/model/trainee.dart';
+import 'package:coach_potato/pages/trainees/trainees_list.dart';
+import 'package:coach_potato/pages/trainees/trainees_list_tiles.dart';
+import 'package:coach_potato/pages/trainings/training_list.dart';
+import 'package:coach_potato/provider/trainee_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Trainings extends StatelessWidget {
+class Trainings extends ConsumerWidget {
   const Trainings({super.key});
 
+  List<Trainee> _filteredTrainees(List<Trainee> trainees, String filter) {
+    if (filter.isEmpty) return trainees;
+    return trainees.where((Trainee t) {
+      return t.firstName?.toLowerCase().contains(filter.toLowerCase()) == true ||
+          t.lastName.toLowerCase().contains(filter.toLowerCase()) ||
+          t.email.toLowerCase().contains(filter.toLowerCase());
+    }).toList();
+  }
+
   @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final AsyncValue<List<Trainee>> trainees = ref.watch(traineesProvider);
+    final String filter = ref.watch(traineeFilterProvider);
+    final String? traineeId = ref.watch(traineeIdProvider);
+
+    return trainees.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (Object e, StackTrace s) => const Center(child: Text('Failed to load trainees')),
+      data: (List<Trainee> trainees) {
+        if (trainees.isEmpty) {
+          return const Center(child: Text('No trainees found'));
+        }
+
+        return Row(
+          children: <Widget>[
+            Container(
+              constraints: const BoxConstraints(maxWidth: 500),
+              child: TraineesList(trainees: _filteredTrainees(trainees, filter)),
+            ),
+
+            if (traineeId != null)
+              TrainingList(traineeId: traineeId),
+          ],
+        );
+      },
+    );
   }
 }

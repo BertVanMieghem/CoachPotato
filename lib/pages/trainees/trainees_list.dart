@@ -1,8 +1,9 @@
 import 'package:coach_potato/constants/ui.dart';
-import 'package:coach_potato/provider/trainee_provider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/material.dart';
 import 'package:coach_potato/model/trainee.dart';
+import 'package:coach_potato/pages/trainees/trainees_list_tiles.dart';
+import 'package:coach_potato/provider/trainee_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TraineesList extends ConsumerWidget {
   const TraineesList({required this.trainees, super.key});
@@ -11,27 +12,38 @@ class TraineesList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ListView.builder(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      itemCount: trainees.length,
-      itemBuilder: (BuildContext context, int index) {
-        final Trainee trainee = trainees[index];
-
-        return ListTile(
-          leading: CircleAvatar(
-            child: Text(trainee.lastName[0].toUpperCase()),
+    return Column(
+      children: <Widget>[
+        if (trainees.length > 10)
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: '${trainees.length} Trainees',
+                prefixIcon: const Icon(Icons.search),
+                border: const OutlineInputBorder(),
+              ),
+              onChanged: (String value) {
+                ref.read(traineeFilterProvider.notifier).state = value;
+              },
+            ),
+          )
+        else
+          Padding(
+            padding: const EdgeInsets.only(top: defPadding / 2),
+            child: Text(
+              'Trainees',
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                fontSize: 18,
+              ),
+            ),
           ),
-          title: Text('${trainee.firstName ?? ''} ${trainee.lastName}'),
-          subtitle: Text(trainee.email),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(defPadding / 2),
-          ),
-          onTap: () {
-            ref.read(traineeIdProvider.notifier).state = trainee.id;
-          },
-        );
-      },
+        Flexible(
+          child: TraineesListTiles(trainees: trainees),
+        ),
+      ],
     );
   }
 }

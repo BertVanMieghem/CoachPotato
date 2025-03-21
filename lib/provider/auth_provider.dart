@@ -55,26 +55,21 @@ class AuthService {
     }
   }
 
-  Future<bool> sendSignInLink(String traineeEmail) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-
-    ActionCodeSettings actionCodeSettings = ActionCodeSettings( // TODO config
-      url: 'https://your-app-url.com/auth', // Your app's URL
+  static Future<void> sendSignInLink(String email) async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final ActionCodeSettings actionCodeSettings = ActionCodeSettings(
+      url: 'https://coachpotato.com',
       handleCodeInApp: true,
-      iOSBundleId: 'com.coachpotato.app',
-      androidPackageName: 'com.coachpotato.app',
+      iOSBundleId: 'com.coach.potato',
+      androidPackageName: 'com.coach.potato',
       androidInstallApp: true,
       androidMinimumVersion: '21',
     );
 
     try {
-      await auth.sendSignInLinkToEmail(
-        email: traineeEmail,
-        actionCodeSettings: actionCodeSettings,
-      );
-      return true;
+      await auth.sendSignInLinkToEmail(email: email, actionCodeSettings: actionCodeSettings);
     } catch (e) {
-      return false;
+      print('Error sending sign-in link: $e');
     }
   }
 
