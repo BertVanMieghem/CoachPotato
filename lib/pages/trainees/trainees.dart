@@ -1,3 +1,4 @@
+import 'package:coach_potato/constants/ui.dart';
 import 'package:coach_potato/model/trainee.dart';
 import 'package:coach_potato/pages/trainees/add_trainee_dialog.dart';
 import 'package:coach_potato/pages/trainees/trainee_detail.dart';
@@ -18,17 +19,6 @@ class Trainees extends ConsumerWidget {
     }).toList();
   }
 
-  Future<void> _showAddTraineeDialog(BuildContext context) async {
-    final TextEditingController emailController = TextEditingController();
-
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AddTraineeDialog(emailController: emailController);
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AsyncValue<List<Trainee>> trainees = ref.watch(traineesProvider);
@@ -37,7 +27,7 @@ class Trainees extends ConsumerWidget {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddTraineeDialog(context),
+        onPressed: () => showDialog(context: context, builder: (BuildContext context) => AddTraineeDialog()),
         child: const Icon(Icons.add),
       ),
       body: trainees.when(
@@ -51,7 +41,7 @@ class Trainees extends ConsumerWidget {
           return Row(
             children: <Widget>[
               Container(
-                constraints: const BoxConstraints(maxWidth: 500),
+                constraints: const BoxConstraints(maxWidth: traineeListWidth),
                 child: TraineesList(trainees: _filteredTrainees(trainees, filter)),
               ),
 

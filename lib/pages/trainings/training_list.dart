@@ -1,4 +1,5 @@
-import 'package:coach_potato/constants/ui.dart';
+import 'package:coach_potato/model/training.dart';
+import 'package:coach_potato/provider/training_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -7,41 +8,26 @@ class TrainingList extends ConsumerWidget {
 
   final String traineeId;
 
-  Widget _addTrainingButton(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {},
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(defPadding),
-        ),
-      ),
-      child: Row(
-        spacing: defPadding / 2,
-        children: <Widget>[
-          Icon(Icons.add, color: Theme.of(context).colorScheme.onPrimary),
-          const Text('Add Training'),
-        ],
-      ),
-    );
-  }
-
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(defPadding / 2),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            _addTrainingButton(context),
-          ],
-        ),
+    final AsyncValue<List<Training>> traineeTrainings = ref.watch(trainingsForTraineeProvider(traineeId));
+
+    return traineeTrainings.when(
+      data: (List<Training> trainings) => ListView.builder(
+        itemCount: trainings.length,
+        itemBuilder: (BuildContext context, int index) {
+          final Training training = trainings[index];
+          return ListTile(
+            title: Text(training.name),
+            subtitle: Text(training.description ?? ''),
+            onTap: () {
+              // Navigate to training detail page
+            },
+          );
+        },
       ),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (Object error, _) => Center(child: Text('Error: $error')),
     );
   }
 }

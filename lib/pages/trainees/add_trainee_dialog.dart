@@ -2,9 +2,9 @@ import 'package:coach_potato/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
 
 class AddTraineeDialog extends StatelessWidget {
-  const AddTraineeDialog({required this.emailController, super.key});
+  AddTraineeDialog({super.key});
 
-  final TextEditingController emailController;
+  final TextEditingController emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
