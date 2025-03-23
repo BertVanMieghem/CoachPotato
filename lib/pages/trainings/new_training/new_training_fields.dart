@@ -1,5 +1,5 @@
 import 'package:coach_potato/constants/ui.dart';
-import 'package:coach_potato/pages/trainings/new_training/exercise_autocomplete_field.dart';
+import 'package:coach_potato/pages/trainings/new_training/exercise_fields.dart';
 import 'package:flutter/material.dart';
 
 class NewTrainingFields extends StatefulWidget {
@@ -13,66 +13,45 @@ class NewTrainingFields extends StatefulWidget {
   final VoidCallback onFinished;
 
   @override
-  _NewTrainingFieldsState createState() => _NewTrainingFieldsState();
+  NewTrainingFieldsState createState() => NewTrainingFieldsState();
 }
 
-class _NewTrainingFieldsState extends State<NewTrainingFields> {
+class NewTrainingFieldsState extends State<NewTrainingFields> {
   final TextEditingController _descriptionController = TextEditingController();
+  final List<GlobalKey<ExerciseFieldsState>> _exerciseKeys = <GlobalKey<ExerciseFieldsState>>[];
 
-  // Each exercise is represented by a map holding its TextEditingControllers.
-  final List<Map<String, dynamic>> _exercises = <Map<String, dynamic>>[];
+  @override
+  void initState() {
+    _addExercise();
+    super.initState();
+  }
 
   @override
   void dispose() {
     _descriptionController.dispose();
-    for (Map<String, dynamic> exercise in _exercises) {
-      exercise['name'].dispose();
-      exercise['sets'].dispose();
-      exercise['reps'].dispose();
-      exercise['weight'].dispose();
-      exercise['note'].dispose();
-    }
     super.dispose();
   }
 
   void _addExercise() {
     setState(() {
-      _exercises.add(<String, TextEditingController>{
-        'name': TextEditingController(),
-        'sets': TextEditingController(),
-        'reps': TextEditingController(),
-        'weight': TextEditingController(),
-        'note': TextEditingController(),
-      });
+      _exerciseKeys.add(GlobalKey<ExerciseFieldsState>());
     });
   }
 
   void _removeExercise(int index) {
     setState(() {
-      final Map<String, dynamic> exercise = _exercises.removeAt(index);
-      exercise['name'].dispose();
-      exercise['sets'].dispose();
-      exercise['reps'].dispose();
-      exercise['weight'].dispose();
-      exercise['note'].dispose();
+      _exerciseKeys.removeAt(index);
     });
   }
 
   void _confirm() {
     final String description = _descriptionController.text.trim();
 
-    // Gather exercise data from each entry.
-    final List<Map<String, dynamic>> exercisesData = _exercises.map((Map<String, dynamic> exercise) {
-      return <String, dynamic>{
-        'name': exercise['name'].text.trim(),
-        'sets': int.tryParse(exercise['sets'].text.trim()) ?? 0,
-        'reps': int.tryParse(exercise['reps'].text.trim()) ?? 0,
-        'weight': double.tryParse(exercise['weight'].text.trim()) ?? 0.0,
-        'note': exercise['note'].text.trim(),
-      };
-    }).toList();
+    final List<Map<String, dynamic>> exercisesData = _exerciseKeys
+        .map((GlobalKey<ExerciseFieldsState> key) => key.currentState?.getData() ?? <String, dynamic>{})
+        .toList();
 
-    // TODO create training in firestore
+    // TODO send data to firestore
 
     widget.onFinished();
   }
@@ -82,10 +61,11 @@ class _NewTrainingFieldsState extends State<NewTrainingFields> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
+        const SizedBox(height: defPadding),
         TextField(
           controller: _descriptionController,
-          decoration: const InputDecoration(
-            labelText: 'Training Description',
+          decoration: InputDecoration(
+            labelText: 'Training description',
             border: OutlineInputBorder(),
           ),
         ),
@@ -94,80 +74,43 @@ class _NewTrainingFieldsState extends State<NewTrainingFields> {
         ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: _exercises.length,
+          itemCount: _exerciseKeys.length,
           itemBuilder: (BuildContext context, int index) {
-            final Map<String, dynamic> exercise = _exercises[index];
-            return Card(
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  spacing: defPadding / 2,
-                  children: <Widget>[
-                    Flexible(
-                      child: ExerciseAutocompleteField(),
-                    ),
-                    Flexible(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Flexible(
-                            child: TextField(
-                              controller: exercise['reps'],
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                labelText: 'Reps',
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
-                          ),
-                          Flexible(
-                            child: TextField(
-                              controller: exercise['weight'],
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                labelText: 'Weight',
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () => _removeExercise(index),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            return ExerciseFields(
+              key: _exerciseKeys[index],
+              onRemove: () => _removeExercise(index),
             );
           },
         ),
         const SizedBox(height: 8),
         OutlinedButton(
           onPressed: _addExercise,
-          child: const Text('Add Exercise'),
+          child: const Text('Add exercise'),
         ),
         const SizedBox(height: defPadding),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            TextButton(
-              onPressed: () {
-                // Signal finished (cancel)
-                widget.onFinished();
-              },
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: _confirm,
-              child: const Text('Confirm'),
-            ),
-          ],
+        Padding(
+          padding: const EdgeInsets.only(right: defPadding * 3),
+          child: Row(
+            spacing: defPadding,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              TextButton(
+                onPressed: widget.onFinished,
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: _confirm,
+                child: const Text('Confirm'),
+              ),
+            ],
+          ),
+        ),
+        Divider(
+          color: Theme.of(context).colorScheme.onSurface,
+          height: 20,
+          thickness: 0.5,
+          indent: 20,
+          endIndent: 20,
         ),
       ],
     );

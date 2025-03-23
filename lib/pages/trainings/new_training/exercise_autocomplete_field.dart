@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ExerciseAutocompleteField extends ConsumerWidget {
-  const ExerciseAutocompleteField({super.key});
+  const ExerciseAutocompleteField({required this.controller, super.key});
+
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -11,6 +13,7 @@ class ExerciseAutocompleteField extends ConsumerWidget {
 
     return exerciseNamesAsync.when(
       data: (List<String> exerciseNames) {
+        const double fieldWidth = 300;
         return Autocomplete<String>(
           optionsBuilder: (TextEditingValue textEditingValue) {
             if (textEditingValue.text.isEmpty) {
@@ -20,17 +23,43 @@ class ExerciseAutocompleteField extends ConsumerWidget {
                 option.toLowerCase().contains(textEditingValue.text.toLowerCase()));
           },
           onSelected: (String selection) {
-            // TODO: Handle selection
+            debugPrint('Selected: $selection');
           },
-          fieldViewBuilder: (BuildContext context, TextEditingController textEditingController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
-            return TextField(
-              controller: textEditingController,
-              focusNode: focusNode,
-              decoration: const InputDecoration(
-                labelText: 'Exercise Name',
-                border: OutlineInputBorder(),
+          fieldViewBuilder: (BuildContext context, TextEditingController textController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
+            return SizedBox(
+              width: fieldWidth,
+              child: TextField(
+                controller: textController,
+                focusNode: focusNode,
+                decoration: const InputDecoration(
+                  labelText: 'Exercise name',
+                  border: OutlineInputBorder(),
+                ),
+                onSubmitted: (String value) => controller.text = value,
               ),
-              onSubmitted: (String value) => onFieldSubmitted(),
+            );
+          },
+          optionsViewBuilder: (BuildContext context, AutocompleteOnSelected<String> onSelected, Iterable<String> options) {
+            return Align(
+              alignment: Alignment.topLeft,
+              child: Material(
+                elevation: 4,
+                child: Container(
+                  width: fieldWidth,
+                  constraints: const BoxConstraints(maxHeight: 200),
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: options.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final String option = options.elementAt(index);
+                      return ListTile(
+                        title: Text(option),
+                        onTap: () => onSelected(option),
+                      );
+                    },
+                  ),
+                ),
+              ),
             );
           },
         );

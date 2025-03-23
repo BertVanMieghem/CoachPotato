@@ -41,7 +41,7 @@ class _TrainingsState extends ConsumerState<Trainings> {
         spacing: defPadding / 2,
         children: <Widget>[
           Icon(Icons.add, color: Theme.of(context).colorScheme.onPrimary),
-          const Text('Add Training'),
+          const Text('Add training'),
         ],
       ),
     );
