@@ -1,4 +1,5 @@
 import 'package:coach_potato/constants/ui.dart';
+import 'package:coach_potato/db/util/training_db_util.dart';
 import 'package:coach_potato/pages/trainings/new_training/exercise_fields.dart';
 import 'package:flutter/material.dart';
 
@@ -17,19 +18,13 @@ class NewTrainingFields extends StatefulWidget {
 }
 
 class NewTrainingFieldsState extends State<NewTrainingFields> {
-  final TextEditingController _descriptionController = TextEditingController();
   final List<GlobalKey<ExerciseFieldsState>> _exerciseKeys = <GlobalKey<ExerciseFieldsState>>[];
+  bool _isLoading = false;
 
   @override
   void initState() {
     _addExercise();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _descriptionController.dispose();
-    super.dispose();
   }
 
   void _addExercise() {
@@ -44,14 +39,20 @@ class NewTrainingFieldsState extends State<NewTrainingFields> {
     });
   }
 
-  void _confirm() {
-    final String description = _descriptionController.text.trim();
-
+  void _confirm() async {
     final List<Map<String, dynamic>> exercisesData = _exerciseKeys
         .map((GlobalKey<ExerciseFieldsState> key) => key.currentState?.getData() ?? <String, dynamic>{})
         .toList();
 
     // TODO send data to firestore
+    print(exercisesData);
+
+    setState(() => _isLoading = true);
+    await TrainingDbUtil.createTraining(
+      traineeId: widget.traineeId,
+      exercises: exercisesData,
+    );
+    setState(() => _isLoading = false);
 
     widget.onFinished();
   }
@@ -62,15 +63,6 @@ class NewTrainingFieldsState extends State<NewTrainingFields> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         const SizedBox(height: defPadding),
-        TextField(
-          controller: _descriptionController,
-          decoration: InputDecoration(
-            labelText: 'Training description',
-            border: OutlineInputBorder(),
-          ),
-        ),
-        const SizedBox(height: 16),
-        // List of exercises
         ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -100,7 +92,12 @@ class NewTrainingFieldsState extends State<NewTrainingFields> {
               ),
               ElevatedButton(
                 onPressed: _confirm,
-                child: const Text('Confirm'),
+                child: _isLoading
+                    ? SizedBox(
+                  width: defPadding,
+                  height: defPadding,
+                  child: const CircularProgressIndicator(),
+                ) : const Text('Confirm'),
               ),
             ],
           ),

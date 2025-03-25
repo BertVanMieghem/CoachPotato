@@ -2,6 +2,7 @@ import 'package:coach_potato/constants/ui.dart';
 import 'package:coach_potato/model/trainee.dart';
 import 'package:coach_potato/pages/trainees/trainees_list.dart';
 import 'package:coach_potato/pages/trainings/new_training/new_training_fields.dart';
+import 'package:coach_potato/pages/trainings/training_list.dart';
 import 'package:coach_potato/provider/trainee_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -87,7 +88,8 @@ class _TrainingsState extends ConsumerState<Trainings> {
 
                       if (_showNewTrainingFields)
                           NewTrainingFields(traineeId: traineeId, onFinished: () => setState(() =>_showNewTrainingFields = false)),
-                      // TrainingList(traineeId: traineeId),
+
+                      TrainingList(traineeId: traineeId),
                     ],
                   ),
                 ),

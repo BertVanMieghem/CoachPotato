@@ -13,21 +13,27 @@ class TrainingList extends ConsumerWidget {
     final AsyncValue<List<Training>> traineeTrainings = ref.watch(trainingsForTraineeProvider(traineeId));
 
     return traineeTrainings.when(
-      data: (List<Training> trainings) => ListView.builder(
-        itemCount: trainings.length,
-        itemBuilder: (BuildContext context, int index) {
-          final Training training = trainings[index];
-          return ListTile(
-            title: Text(training.name),
-            subtitle: Text(training.description ?? ''),
-            onTap: () {
-              // Navigate to training detail page
-            },
-          );
-        },
+      data: (List<Training> trainings) => SingleChildScrollView(
+        child: Column(
+          children: <ListView>[
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: trainings.length,
+              itemBuilder: (BuildContext context, int index) {
+                final Training training = trainings[index];
+                return ListTile(
+                  title: Text(training.createdAt.toString()),
+                  onTap: () {
+                    // Navigate to training detail page
+                  },
+                );
+              },
+            ),
+          ],
+        ),
       ),
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (Object error, _) => Center(child: Text('Error: $error')),
+      error: (Object error, _) => Center(child: Text('Error: ${error.toString()}')),
     );
   }
 }

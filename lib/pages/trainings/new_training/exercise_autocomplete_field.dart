@@ -35,7 +35,7 @@ class ExerciseAutocompleteField extends ConsumerWidget {
                   labelText: 'Exercise name',
                   border: OutlineInputBorder(),
                 ),
-                onSubmitted: (String value) => controller.text = value,
+                onChanged: (String value) => controller.text = value,
               ),
             );
           },

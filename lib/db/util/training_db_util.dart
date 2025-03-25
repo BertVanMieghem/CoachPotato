@@ -1,37 +1,49 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coach_potato/model/training.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class TrainingDbUtil {
   static final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  static final FirebaseAuth auth = FirebaseAuth.instance;
 
   static Future<void> createTraining({
-    required String coachId,
     required String traineeId,
-    required String name,
     required List<Map<String, dynamic>> exercises,
-    String? description,
   }) async {
+    final String? coachUid = auth.currentUser?.uid;
+    if (coachUid == null) {
+      throw Exception('No authenticated coach');
+    }
+
     final DocumentReference<Map<String, dynamic>> trainingRef = FirebaseFirestore.instance.collection('trainings').doc();
     final FieldValue now = FieldValue.serverTimestamp();
 
     await trainingRef.set(<String, dynamic>{
-      'coachId': coachId,
+      'coachId': coachUid,
       'traineeId': traineeId,
-      'name': name,
-      'description': description,
+      'exercises': exercises,
       'createdAt': now,
       'updatedAt': now,
     });
+  }
 
-    for (Map<String, dynamic> exercise in exercises) {
-      await trainingRef.collection('exercises').add(<String, dynamic>{
-        'name': exercise['name'],
-        'sets': exercise['sets'],
-        'reps': exercise['reps'],
-        'weight': exercise['weight'],
-        'note': exercise['note'],
-        'orderIndex': exercise['orderIndex'],
-      });
+  static Future<List<Training>> getTrainings(String traineeId) async {
+    final String? coachId = FirebaseAuth.instance.currentUser?.uid;
+    if (coachId == null) {
+      throw Exception('Not authenticated');
     }
+
+    final QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance.collection('trainings')
+        .where('coachId', isEqualTo: coachId)
+        .where('traineeId', isEqualTo: traineeId)
+        .orderBy('createdAt', descending: true).get();
+
+    return snapshot.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+      final Map<String, dynamic> data = doc.data();
+      data['id'] = doc.id;
+      return Training.fromMap(data);
+    }).toList();
   }
 
 }
