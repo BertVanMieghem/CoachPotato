@@ -74,23 +74,25 @@ class _TrainingsState extends ConsumerState<Trainings> {
                 constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width - traineeListWidth),
                 child: Padding(
                   padding: const EdgeInsets.all(defPadding / 2),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          _addTrainingButton(context, traineeId),
-                        ],
-                      ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            _addTrainingButton(context, traineeId),
+                          ],
+                        ),
 
-                      if (_showNewTrainingFields)
-                          NewTrainingFields(traineeId: traineeId, onFinished: () => setState(() =>_showNewTrainingFields = false)),
+                        if (_showNewTrainingFields)
+                            NewTrainingFields(traineeId: traineeId, onFinished: () => setState(() =>_showNewTrainingFields = false)),
 
-                      TrainingList(traineeId: traineeId),
-                    ],
+                        TrainingList(traineeId: traineeId),
+                      ],
+                    ),
                   ),
                 ),
               ),

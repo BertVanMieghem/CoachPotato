@@ -54,7 +54,10 @@ class ExerciseAutocompleteField extends ConsumerWidget {
                       final String option = options.elementAt(index);
                       return ListTile(
                         title: Text(option),
-                        onTap: () => onSelected(option),
+                        onTap: () {
+                          controller.text = option;
+                          onSelected(option);
+                          },
                       );
                     },
                   ),
