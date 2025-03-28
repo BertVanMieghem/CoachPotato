@@ -82,9 +82,9 @@ class TrainingList extends ConsumerWidget {
                   child: ListView.builder(
                     shrinkWrap: true,
                     reverse: true,
-                    itemCount: trainings.length,
+                    itemCount: weekTrainings.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final Training training = trainings[index];
+                      final Training training = weekTrainings[index];
                       return Card(
                         elevation: 4,
                         shape: RoundedRectangleBorder(
@@ -99,7 +99,7 @@ class TrainingList extends ConsumerWidget {
                               if (training.note.isNotEmpty)
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: defPadding),
-                                  child: Text(training.note ?? '',
+                                  child: Text(training.note,
                                     style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                                   ),
                                 ),
