@@ -16,7 +16,7 @@ class TraineesList extends ConsumerWidget {
       children: <Widget>[
         if (trainees.length > 10)
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(defPadding),
             child: TextField(
               decoration: InputDecoration(
                 labelText: '${trainees.length} Trainees',

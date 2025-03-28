@@ -28,22 +28,25 @@ class _TrainingsState extends ConsumerState<Trainings> {
   }
 
   Widget _addTrainingButton(BuildContext context, String traineeId) {
-    return ElevatedButton(
-      onPressed: () => setState(() => _showNewTrainingFields = true),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(defPadding),
+    return SizedBox(
+      height: defPadding * 4,
+      child: ElevatedButton(
+        onPressed: () => setState(() => _showNewTrainingFields = true),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
+          foregroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(defPadding),
+          ),
         ),
-      ),
-      child: Row(
-        spacing: defPadding / 2,
-        children: <Widget>[
-          Icon(Icons.add, color: Theme.of(context).colorScheme.onPrimary),
-          const Text('Add training'),
-        ],
+        child: Row(
+          spacing: defPadding / 2,
+          children: <Widget>[
+            Icon(Icons.add, color: Theme.of(context).colorScheme.onTertiaryContainer),
+            const Text('Add training'),
+          ],
+        ),
       ),
     );
   }
@@ -73,19 +76,15 @@ class _TrainingsState extends ConsumerState<Trainings> {
               ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width - traineeListWidth),
                 child: Padding(
-                  padding: const EdgeInsets.all(defPadding / 2),
+                  padding: const EdgeInsets.all(defPadding),
                   child: SingleChildScrollView(
                     child: Column(
+                      spacing: defPadding,
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            _addTrainingButton(context, traineeId),
-                          ],
-                        ),
+                        _addTrainingButton(context, traineeId),
 
                         if (_showNewTrainingFields)
                             NewTrainingFields(traineeId: traineeId, onFinished: () => setState(() =>_showNewTrainingFields = false)),

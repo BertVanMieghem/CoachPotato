@@ -59,14 +59,6 @@ class ExerciseFieldsState extends State<ExerciseFields> {
   }
 
   /// Returns the current data in this widget as a map.
-  /// For example:
-  /// {
-  ///   'name': 'Squat',
-  ///   'sets': [
-  ///     {'reps': 5, 'weight': 50.0},
-  ///     {'reps': 4, 'weight': 70.0},
-  ///   ]
-  /// }
   Map<String, dynamic> getData() {
     List<Map<String, dynamic>> sets = <Map<String, dynamic>>[];
     for (final (int index, Map<String, TextEditingController> set) in _setControllers.indexed) {
