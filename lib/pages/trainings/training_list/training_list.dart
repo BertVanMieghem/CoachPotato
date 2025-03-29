@@ -1,6 +1,3 @@
-import 'package:coach_potato/constants/ui.dart';
-import 'package:coach_potato/model/exercise.dart';
-import 'package:coach_potato/model/exercise_set.dart';
 import 'package:coach_potato/model/training.dart';
 import 'package:coach_potato/pages/trainings/training_list/training_list_tile.dart';
 import 'package:coach_potato/provider/training_provider.dart';
