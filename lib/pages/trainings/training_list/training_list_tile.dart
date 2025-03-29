@@ -62,12 +62,16 @@ class TrainingListTileState extends State<TrainingListTile> {
                   height: 50,
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.secondaryContainer,
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 0.5,
+                    ),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   alignment: Alignment.center,
                   child: Text(
                     'W${widget.week}',
-                    style: TextStyle(color: Theme.of(context).colorScheme.onSecondaryContainer,),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSecondaryContainer),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -78,8 +82,8 @@ class TrainingListTileState extends State<TrainingListTile> {
               Flexible(
                 child: Container(
                   height: _isExpanded ? _listViewHeight : 50,
-                  width: 2,
-                  color: Theme.of(context).colorScheme.secondaryContainer,
+                  width: 1,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
           ],
@@ -88,7 +92,7 @@ class TrainingListTileState extends State<TrainingListTile> {
 
         _isExpanded
           ? ExpandedWeekTrainings(listKey: _listKey, trainings: widget.trainings)
-          : CollapsedWeekTrainings(numberOfTrainings: widget.trainings.length),
+          : CollapsedWeekTrainings(numberOfTrainings: widget.trainings.length, onClick: () => setState(() => _isExpanded = !_isExpanded)),
       ],
     );
   }

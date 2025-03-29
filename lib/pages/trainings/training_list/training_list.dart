@@ -1,3 +1,4 @@
+import 'package:coach_potato/constants/ui.dart';
 import 'package:coach_potato/model/training.dart';
 import 'package:coach_potato/pages/trainings/training_list/training_list_tile.dart';
 import 'package:coach_potato/provider/training_provider.dart';
@@ -25,10 +26,17 @@ class TrainingList extends ConsumerWidget {
     return traineeTrainings.when(
       data: (List<Training> trainings) {
 
+        if (trainings.isEmpty) {
+          return Padding(
+            padding: const EdgeInsets.only(top: defPadding * 6),
+            child: Center(
+              child: Text('No trainings found', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+            ),
+          );
+        }
+
         // group trainings by week
         final Map<int, List<Training>> groupedTrainings = groupTrainingsByWeek(trainings);
-        groupedTrainings[2] = groupedTrainings[1]!;
-
         final List<int> weeks = groupedTrainings.keys.toList()..sort();
 
         return ListView.builder(

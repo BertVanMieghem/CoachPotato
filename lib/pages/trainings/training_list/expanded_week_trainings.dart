@@ -27,7 +27,7 @@ class ExpandedWeekTrainings extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 final Training training = trainings[index];
                 return Card(
-                  elevation: 4,
+                  elevation: 1,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(defPadding / 2),
                   ),

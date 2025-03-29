@@ -22,13 +22,13 @@ class TraineesListTiles extends ConsumerWidget {
 
         return ListTile(
           leading: CircleAvatar(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
             child: Text(trainee.lastName[0].toUpperCase()),
           ),
           title: Text('${trainee.firstName ?? ''} ${trainee.lastName}'),
           subtitle: Text(trainee.email),
           selected: isSelected,
-          selectedColor: Theme.of(context).colorScheme.onPrimaryContainer,
-          selectedTileColor: Theme.of(context).colorScheme.primaryContainer,
+          selectedTileColor: Theme.of(context).colorScheme.onPrimary,
           tileColor: Theme.of(context).colorScheme.surfaceContainerLow,
           onTap: () {
             ref.read(traineeIdProvider.notifier).state = trainee.id;
