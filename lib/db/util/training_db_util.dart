@@ -8,6 +8,8 @@ class TrainingDbUtil {
 
   static Future<void> createTraining({
     required String traineeId,
+    required int week,
+    required String note,
     required List<Map<String, dynamic>> exercises,
   }) async {
     final String? coachUid = auth.currentUser?.uid;
@@ -22,6 +24,8 @@ class TrainingDbUtil {
       'coachId': coachUid,
       'traineeId': traineeId,
       'exercises': exercises,
+      'week': week,
+      'note': note,
       'createdAt': now,
       'updatedAt': now,
     });

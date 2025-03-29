@@ -50,13 +50,16 @@ class _NewTrainingFieldsState extends ConsumerState<NewTrainingFields> {
   void _confirm() async {
     final List<Map<String, dynamic>> exercisesData = _exerciseKeys
         .map((GlobalKey<ExerciseFieldsState> key) =>
-    key.currentState?.getData() ?? <String, dynamic>{},).toList();
+    key.currentState?.getData() ?? <String, dynamic>{},
+    ).toList();
 
     print(exercisesData);
 
     setState(() => _isLoading = true);
     await TrainingDbUtil.createTraining(
       traineeId: widget.traineeId,
+      week: int.parse(_weekController.text),
+      note: _noteController.text,
       exercises: exercisesData,
     );
     setState(() => _isLoading = false);
@@ -84,7 +87,7 @@ class _NewTrainingFieldsState extends ConsumerState<NewTrainingFields> {
 
             return Column(
               children: <Widget>[
-                const SizedBox(height: defPadding),
+                const SizedBox(height: 16),
                 TrainingHeaderFields(weekController: _weekController, trainingController: _trainingController, noteController: _noteController),
                 ListView.builder(
                   shrinkWrap: true,

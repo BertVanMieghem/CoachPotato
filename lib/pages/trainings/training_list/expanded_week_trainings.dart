@@ -38,19 +38,16 @@ class ExpandedWeekTrainings extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text('Training ${index + 1}', style: TextStyle(color: Theme.of(context).colorScheme.tertiary)),
+                        Text('created on ${training.createdAt.toString()}',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.secondary),
+                        ),
                         if (training.note.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: defPadding),
-                            child: Text(training.note,
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurface),
-                            ),
+                          Text(training.note,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                           ),
 
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: defPadding),
-                          child: Text('created on ${training.createdAt.toString().substring(0, 10)}',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.secondary),
-                          ),
+                        SizedBox(
+                          height: defPadding,
                         ),
 
                         for (final Exercise exercise in training.exercises)

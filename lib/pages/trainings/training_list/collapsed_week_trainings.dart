@@ -20,7 +20,7 @@ class CollapsedWeekTrainings extends StatelessWidget {
           ),
           child: Padding(
             padding: const EdgeInsets.all(defPadding),
-            child: Text('$numberOfTrainings trainings...', style: TextStyle(color: Theme.of(context).colorScheme.tertiary)),
+            child: Text('$numberOfTrainings training${numberOfTrainings == 1 ? '' : 's'}...', style: TextStyle(color: Theme.of(context).colorScheme.tertiary)),
           ),
         ),
       ),

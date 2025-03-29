@@ -15,7 +15,7 @@ class TrainingHeaderFields extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return                     Row(
+    return Row(
       spacing: defPadding,
       children: <Widget>[
         SizedBox(
