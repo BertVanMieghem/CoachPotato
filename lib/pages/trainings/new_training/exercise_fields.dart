@@ -184,7 +184,7 @@ class ExerciseFieldsState extends State<ExerciseFields> {
                           if (_hasNoteList[index])
                             Expanded(
                               child: TextField(
-                                controller: _setControllers[index]['notes'],
+                                controller: _setControllers[index]['note'],
                                 style: const TextStyle(fontSize: 14),
                                 decoration: InputDecoration(
                                   hintText: 'Note',
