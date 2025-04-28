@@ -1,5 +1,4 @@
 import 'package:coach_potato/model/exercise_set.dart';
-import 'package:coach_potato/model/training.dart';
 
 class Exercise {
   factory Exercise.fromMap(Map<String, dynamic> data) => Exercise(
