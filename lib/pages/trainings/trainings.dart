@@ -89,7 +89,7 @@ class _TrainingsState extends ConsumerState<Trainings> {
                           _addTrainingButton(context, traineeId),
 
                           if (_showNewTrainingFields)
-                              NewTrainingFields(traineeId: traineeId, onFinished: () => setState(() =>_showNewTrainingFields = false)),
+                              NewTrainingFields(traineeId: traineeId, onFinished: () => setState(() => _showNewTrainingFields = false)),
 
                           TrainingList(traineeId: traineeId),
                         ],

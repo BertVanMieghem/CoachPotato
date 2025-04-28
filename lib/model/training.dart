@@ -36,4 +36,18 @@ class Training {
   static List<Exercise> parseExercises(List<dynamic> exercises) {
     return exercises.map((dynamic e) => Exercise.fromMap(e as Map<String, dynamic>)).toList();
   }
+
+  Training copy() {
+    return Training(
+      id: id,
+      coachId: coachId,
+      traineeId: traineeId,
+      week: week,
+      note: note,
+      exercises: exercises.map((Exercise e) => e.copy()).toList(),
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    );
+  }
+
 }

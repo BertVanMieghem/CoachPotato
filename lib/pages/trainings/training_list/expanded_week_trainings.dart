@@ -1,7 +1,10 @@
 import 'package:coach_potato/constants/ui.dart';
+import 'package:coach_potato/db/util/training_db_util.dart';
 import 'package:coach_potato/model/exercise.dart';
 import 'package:coach_potato/model/exercise_set.dart';
 import 'package:coach_potato/model/training.dart';
+import 'package:coach_potato/pages/trainings/new_training/exercise_fields.dart';
+import 'package:coach_potato/pages/trainings/training_list/training_edit/training_edit_fields.dart';
 import 'package:flutter/material.dart';
 
 class ExpandedWeekTrainings extends StatefulWidget {
@@ -19,6 +22,10 @@ class ExpandedWeekTrainings extends StatefulWidget {
 }
 
 class _ExpandedWeekTrainingsState extends State<ExpandedWeekTrainings> {
+  bool _isLoading = false;
+  bool _showNewExerciseFields = false;
+
+  final Map<int, Training> _editableCopies = <int, Training>{};
   final Map<int, bool> _editMode = <int, bool>{};
   final Map<String, TextEditingController> _controllers = <String, TextEditingController>{};
 
@@ -30,9 +37,43 @@ class _ExpandedWeekTrainingsState extends State<ExpandedWeekTrainings> {
     super.dispose();
   }
 
+  void _saveTraining(int index) async {
+    final Training? editedTraining = _editableCopies[index];
+    if (editedTraining == null) return;
+
+    setState(() => _isLoading = true);
+    await TrainingDbUtil.updateTraining(editedTraining);
+
+    setState(() {
+      widget.trainings[index] = editedTraining;
+      _editableCopies.remove(index);
+      _editMode[index] = false;
+      _isLoading = false;
+    });
+  }
+
+
+  void _cancelTraining(int index) {
+    setState(() {
+      _editableCopies.remove(index);
+      _editMode[index] = false;
+    });
+  }
+
+
   void _toggleEdit(int trainingIndex) {
     setState(() {
-      _editMode[trainingIndex] = !(_editMode[trainingIndex] ?? false);
+      _isLoading = false;
+      final bool currentlyEditing = _editMode[trainingIndex] ?? false;
+      _editMode[trainingIndex] = !currentlyEditing;
+
+      if (!currentlyEditing) {
+        // Entering edit mode -> create a deep copy
+        _editableCopies[trainingIndex] = widget.trainings[trainingIndex].copy();
+      } else {
+        // Leaving edit mode -> clean up
+        _editableCopies.remove(trainingIndex);
+      }
     });
   }
 
@@ -53,7 +94,7 @@ class _ExpandedWeekTrainingsState extends State<ExpandedWeekTrainings> {
               reverse: true,
               itemCount: widget.trainings.length,
               itemBuilder: (BuildContext context, int index) {
-                final Training training = widget.trainings[index];
+                final Training training = _editableCopies[index] ?? widget.trainings[index];
                 final bool inEditMode = _editMode[index] ?? false;
 
                 return Card(
@@ -85,28 +126,35 @@ class _ExpandedWeekTrainingsState extends State<ExpandedWeekTrainings> {
                               ],
                             ),
                             if (inEditMode)
-                              Row(
-                                children: <Widget>[
-                                  SizedBox(
-                                    width: defPadding * 3,
-                                    height: defPadding * 3,
-                                    child: IconButton(
-                                      onPressed: () => _toggleEdit(index),
-                                      icon: Icon(Icons.close, size: 14),
-                                      tooltip: 'Cancel edit',
+                              if (_isLoading)
+                                SizedBox(
+                                  width: defPadding,
+                                  height: defPadding,
+                                  child: const CircularProgressIndicator(),
+                                )
+                              else
+                                Row(
+                                  children: <Widget>[
+                                    SizedBox(
+                                      width: defPadding * 3,
+                                      height: defPadding * 3,
+                                      child: IconButton(
+                                        onPressed: () => _cancelTraining(index),
+                                        icon: Icon(Icons.close, size: 14),
+                                        tooltip: 'Cancel edit',
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: defPadding * 3,
-                                    height: defPadding * 3,
-                                    child: IconButton(
-                                      onPressed: () => _toggleEdit(index),
-                                      icon: Icon(Icons.check, size: 14),
-                                      tooltip: 'Confirm edit',
+                                    SizedBox(
+                                      width: defPadding * 3,
+                                      height: defPadding * 3,
+                                      child: IconButton(
+                                        onPressed: () => _saveTraining(index),
+                                        icon: Icon(Icons.check, size: 14),
+                                        tooltip: 'Confirm edit',
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              )
+                                  ],
+                                )
                             else
                               SizedBox(
                                 width: defPadding * 3,
@@ -136,7 +184,7 @@ class _ExpandedWeekTrainingsState extends State<ExpandedWeekTrainings> {
                                       if (inEditMode)
                                         TextButton(
                                           onPressed: () => setState(() => training.exercises.remove(exercise)),
-                                          child: const Text('Remove exercise', style: TextStyle(color: Colors.redAccent)),
+                                          child: Text('Remove exercise', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
                                         ),
                                     ],
                                   ),
@@ -159,44 +207,10 @@ class _ExpandedWeekTrainingsState extends State<ExpandedWeekTrainings> {
                                                   ),
                                                 ),
                                                 if (inEditMode)
-                                                  Row(
-                                                    children: <Widget>[
-                                                      SizedBox(
-                                                        width: 60,
-                                                        child: TextField(
-                                                          controller: _getController('${training.hashCode}_${exercise.hashCode}_${i}_weight', set.weight.toString()),
-                                                          style: const TextStyle(fontSize: 14),
-                                                          decoration: const InputDecoration(
-                                                            isDense: true,
-                                                            contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                                                            border: OutlineInputBorder(),
-                                                          ),
-                                                          keyboardType: TextInputType.number,
-                                                        ),
-                                                      ),
-                                                      const Text(' kg', style: TextStyle(fontSize: 12)),
-                                                      const SizedBox(width: defPadding),
-                                                      SizedBox(
-                                                        width: 60,
-                                                        child: TextField(
-                                                          controller: _getController('${training.hashCode}_${exercise.hashCode}_${i}_reps', set.reps.toString()),
-                                                          style: const TextStyle(fontSize: 14),
-                                                          decoration: const InputDecoration(
-                                                            isDense: true,
-                                                            contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                                                            border: OutlineInputBorder(),
-                                                          ),
-                                                          keyboardType: TextInputType.number,
-                                                        ),
-                                                      ),
-                                                      const Text(' reps', style: TextStyle(fontSize: 12)),
-                                                      const SizedBox(width: defPadding),
-                                                      IconButton(
-                                                        icon: const Icon(Icons.remove_circle_outline, size: 16, color: Colors.redAccent),
-                                                        tooltip: 'Remove set',
-                                                        onPressed: () => setState(() => exercise.sets.removeAt(i)),
-                                                      ),
-                                                    ],
+                                                  TrainingEditFields(
+                                                    weightController: _getController('${training.hashCode}_${exercise.hashCode}_${i}_weight', set.weight.toString()),
+                                                    repController: _getController('${training.hashCode}_${exercise.hashCode}_${i}_reps', set.reps.toString()),
+                                                    removeSet: () => setState(() => exercise.sets.removeAt(i)),
                                                   )
                                                 else
                                                   Row(
@@ -221,6 +235,17 @@ class _ExpandedWeekTrainingsState extends State<ExpandedWeekTrainings> {
                               ],
                             ),
                           ),
+                        if (inEditMode)
+                          if (_showNewExerciseFields)
+                            ExerciseFields(
+                              key: GlobalKey<ExerciseFieldsState>(),
+                              onRemove: () => (), //_removeExercise(index),
+                            )
+                          else
+                            OutlinedButton(
+                              onPressed: () => setState(() => _showNewExerciseFields = !_showNewExerciseFields),
+                              child: const Text('Add exercise'),
+                            ),
                       ],
                     ),
                   ),

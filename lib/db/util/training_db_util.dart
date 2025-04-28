@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coach_potato/model/exercise.dart';
 import 'package:coach_potato/model/training.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -49,5 +50,27 @@ class TrainingDbUtil {
       return Training.fromMap(data);
     }).toList();
   }
+
+  static Future<void> updateTraining(Training training) async {
+    final String? coachUid = auth.currentUser?.uid;
+    if (coachUid == null) {
+      throw Exception('No authenticated coach');
+    }
+
+    final DocumentReference<Map<String, dynamic>> trainingRef =
+    firestore.collection('trainings').doc(training.id);
+
+    final FieldValue now = FieldValue.serverTimestamp();
+
+    await trainingRef.update(<String, dynamic>{
+      'coachId': coachUid,
+      'traineeId': training.traineeId,
+      'exercises': training.exercises.map((Exercise e) => e.toMap()).toList(),
+      'week': training.week,
+      'note': training.note,
+      'updatedAt': now,
+    });
+  }
+
 
 }

@@ -1,3 +1,5 @@
+import 'package:coach_potato/model/exercise.dart';
+
 class ExerciseSet {
   factory ExerciseSet.fromMap(Map<String, dynamic> data) => ExerciseSet(
     reps: data['reps'] as int,
@@ -17,4 +19,23 @@ class ExerciseSet {
   final double weight;
   final double? rpe;
   final String? note;
+
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'reps': reps,
+      'weight': weight,
+      'rpe': rpe,
+      'note': note,
+    };
+  }
+
+  ExerciseSet copy() {
+    return ExerciseSet(
+      reps: reps,
+      weight: weight,
+      rpe: rpe,
+      note: note,
+    );
+  }
 }
